@@ -6,7 +6,7 @@ from src.physics import calculate_square_root_law, calculate_deviations
 TICKERS = ["FLOT", "SBER", "SELG"] 
 
 def main():
-    print("🕵️ Запуск Backtest-сканера (Анализ эффективности сигналов)...\n")
+    print("Запуск Backtest-сканера (Анализ эффективности сигналов)...\n")
     
     for ticker in TICKERS:
         df = load_ticker_data(ticker)

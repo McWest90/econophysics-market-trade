@@ -35,12 +35,12 @@ def calculate_square_root_law(df, bins=40):
     )
     
     return {
-        'alpha': slope,          # Коэффициент (должен быть ~0.5)
-        'r2': r_value**2,        # Точность
-        'binned_data': binned_data,       # Все усредненные точки
-        'smart_money': smart_money_data,  # Точки, по которым строили прямую
-        'params': (slope, intercept),     # Параметры линии y = kx + b
-        'raw_data': df_clean              # Сырые точки
+        'alpha': slope,
+        'r2': r_value**2,
+        'binned_data': binned_data,
+        'smart_money': smart_money_data,
+        'params': (slope, intercept),
+        'raw_data': df_clean
     }
 
 def calculate_deviations(df, model_res):

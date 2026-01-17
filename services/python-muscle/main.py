@@ -6,11 +6,9 @@ import traceback
 from sqlalchemy import create_engine, text
 from t_tech.invest import AsyncClient, CandleInterval, MarketDataRequest, SubscribeCandlesRequest, SubscriptionAction
 
-# Настройка логов
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [MUSCLE] %(message)s")
 logger = logging.getLogger("Muscle")
 
-# Конфиг
 TOKEN = os.getenv("T_BANK_TOKEN")
 DATABASE_URL = os.getenv("DATABASE_URL")
 WATCHLIST = ["SELG", "SBER", "FLOT", "KMAZ", "VTBR"]
@@ -34,19 +32,16 @@ async def main():
 
     engine = get_db_engine()
     
-    # --- ВАЖНОЕ ИСПРАВЛЕНИЕ: KEEPALIVE OPTIONS ---
-    # Это заставит клиента пинговать сервер, чтобы соединение не рвалось
     grpc_options = [
-        ('grpc.keepalive_time_ms', 15000),          # Пинг каждые 15 сек
-        ('grpc.keepalive_timeout_ms', 5000),       # Ждем ответа 5 сек
-        ('grpc.keepalive_permit_without_calls', 1), # Разрешить пинг, даже если нет данных (рынок закрыт)
-        ('grpc.http2.max_pings_without_data', 0),  # Снять ограничение на кол-во пингов
+        ('grpc.keepalive_time_ms', 15000),
+        ('grpc.keepalive_timeout_ms', 5000),
+        ('grpc.keepalive_permit_without_calls', 1),
+        ('grpc.http2.max_pings_without_data', 0),
     ]
 
     async with AsyncClient(TOKEN, options=grpc_options) as client:
         logger.info("🔌 Подключение к T-Bank API...")
 
-        # --- ЭТАП А: Получаем UID инструментов ---
         uid_map = {} 
         uids_to_subscribe = []
 
@@ -57,16 +52,15 @@ async def main():
                     if item.class_code == 'TQBR':
                         uid_map[item.uid] = ticker
                         uids_to_subscribe.append(item.uid)
-                        logger.info(f"✅ Найден {ticker}: {item.uid}")
+                        logger.info(f"Найден {ticker}: {item.uid}")
                         break
             except Exception as e:
-                logger.error(f"❌ Не найден {ticker}: {e}")
+                logger.error(f"Не найден {ticker}: {e}")
 
         if not uids_to_subscribe:
             logger.error("Не на что подписываться. Выход.")
             return
 
-        # --- ЭТАП Б: Подготовка запроса ---
         async def request_iterator():
             yield MarketDataRequest(
                 subscribe_candles_request=SubscribeCandlesRequest(
@@ -78,15 +72,14 @@ async def main():
                     waiting_close=False
                 )
             )
-            # Вечный цикл, чтобы генератор не закрылся
             while True:
                 await asyncio.sleep(60)
 
-        logger.info("📡 Подписываемся на поток свечей...")
+        logger.info("Подписываемся на поток свечей...")
 
         market_data_stream = client.market_data_stream.market_data_stream(request_iterator())
 
-        logger.info("🚀 Muscle запущен! Слушаем рынок...")
+        logger.info("Muscle запущен! Слушаем рынок...")
 
         try:
             async for marketdata in market_data_stream:
@@ -119,7 +112,7 @@ async def main():
                                 "volume": c.volume,
                                 "volatility": volatility
                             })
-                        logger.info(f"📥 {ticker} | {c.time.strftime('%H:%M')} | P: {close_p} | Vol: {c.volume}")
+                        logger.info(f"{ticker} | {c.time.strftime('%H:%M')} | P: {close_p} | Vol: {c.volume}")
                     except Exception as e:
                         logger.error(f"Ошибка БД: {e}")
 
@@ -127,7 +120,6 @@ async def main():
                     logger.debug("Ping received")
 
         except Exception as e:
-             # Логируем, но не паникуем, внешний цикл перезапустит
              logger.warning(f"Разрыв соединения: {e}")
 
 if __name__ == "__main__":
@@ -135,8 +127,8 @@ if __name__ == "__main__":
         try:
             asyncio.run(main())
         except KeyboardInterrupt:
-            logger.info("🛑 Остановка сервиса...")
+            logger.info("Остановка сервиса...")
             break
         except Exception as e:
-            logger.error(f"💥 Критическая ошибка: {e}. Рестарт через 5 сек...")
+            logger.error(f"Критическая ошибка: {e}. Рестарт через 5 сек...")
             time.sleep(5)

@@ -1,10 +1,12 @@
 from fastapi import FastAPI, BackgroundTasks, HTTPException
 from pydantic import BaseModel
 from typing import List, Optional
+import pandas as pd
 
 from .loader import download_data
 from .storage import load_ticker_data, init_db
 from .physics import calculate_square_root_law
+from .physics import calculate_deviations
 
 from .ml_handler import ai_service
 
@@ -87,3 +89,29 @@ def get_ai_prediction(ticker: str):
         "ai_volatility_prediction": ai_vol,
         "recommendation": "WATCH" if ai_vol > 0.1 else "SLEEP"
     }
+
+@app.get("/indicators/{ticker}")
+def get_zscore_history(ticker: str):
+    """
+    Возвращает историю Z-Score для графика.
+    """
+    df = load_ticker_data(ticker)
+    if df.empty:
+        raise HTTPException(status_code=404, detail="Нет данных")
+    
+    df_slice = df.tail(500).copy()
+
+    model = calculate_square_root_law(df_slice)
+    if not model:
+        raise HTTPException(status_code=400, detail="Мало данных для физики")
+        
+    df_dev = calculate_deviations(df_slice, model)
+    
+    result = []
+    for _, row in df_dev.iterrows():
+        result.append({
+            "time": row['time'],
+            "z_score": row['z_score'] if not pd.isna(row['z_score']) else 0.0
+        })
+        
+    return result

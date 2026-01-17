@@ -1,0 +1,12 @@
+C:\econophysics-market-trade\services\dotnet-boss\QuantCore.Domain\bin\Debug\net9.0\QuantCore.Domain.deps.json
+C:\econophysics-market-trade\services\dotnet-boss\QuantCore.Domain\bin\Debug\net9.0\QuantCore.Domain.dll
+C:\econophysics-market-trade\services\dotnet-boss\QuantCore.Domain\bin\Debug\net9.0\QuantCore.Domain.pdb
+C:\econophysics-market-trade\services\dotnet-boss\QuantCore.Domain\obj\Debug\net9.0\QuantCore.Domain.GeneratedMSBuildEditorConfig.editorconfig
+C:\econophysics-market-trade\services\dotnet-boss\QuantCore.Domain\obj\Debug\net9.0\QuantCore.Domain.AssemblyInfoInputs.cache
+C:\econophysics-market-trade\services\dotnet-boss\QuantCore.Domain\obj\Debug\net9.0\QuantCore.Domain.AssemblyInfo.cs
+C:\econophysics-market-trade\services\dotnet-boss\QuantCore.Domain\obj\Debug\net9.0\QuantCore.Domain.csproj.CoreCompileInputs.cache
+C:\econophysics-market-trade\services\dotnet-boss\QuantCore.Domain\obj\Debug\net9.0\QuantCore.Domain.sourcelink.json
+C:\econophysics-market-trade\services\dotnet-boss\QuantCore.Domain\obj\Debug\net9.0\QuantCore.Domain.dll
+C:\econophysics-market-trade\services\dotnet-boss\QuantCore.Domain\obj\Debug\net9.0\refint\QuantCore.Domain.dll
+C:\econophysics-market-trade\services\dotnet-boss\QuantCore.Domain\obj\Debug\net9.0\QuantCore.Domain.pdb
+C:\econophysics-market-trade\services\dotnet-boss\QuantCore.Domain\obj\Debug\net9.0\ref\QuantCore.Domain.dll

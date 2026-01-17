@@ -9,7 +9,7 @@ TICKER = "SELG"
 EPOCHS = 100
 
 def train():
-    print(f"🧠 Обучение PINN модели на {TICKER}...")
+    print(f"Обучение PINN модели на {TICKER}...")
     
     df = load_ticker_data(TICKER)
     if df.empty:
