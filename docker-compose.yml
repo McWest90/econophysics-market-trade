@@ -1,0 +1,66 @@
+version: '3.8'
+
+services:
+  python-brain:
+    build:
+      context: ./services/python-brain
+      dockerfile: Dockerfile
+    container_name: quant_brain
+    restart: always
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./services/python-brain/app:/app/app
+      - ./data/models:/app/models             
+    environment:
+      - DATABASE_URL=postgresql://quant_user:quant_pass@postgres:5432/quant_db
+      - REDIS_URL=redis://redis:6379/0
+      - RABBITMQ_URL=amqp://guest:guest@rabbitmq:5672/
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      - quant_net
+
+  
+  postgres:
+    image: postgres:15-alpine
+    container_name: quant_postgres
+    restart: always
+    environment:
+      POSTGRES_USER: quant_user
+      POSTGRES_PASSWORD: quant_pass
+      POSTGRES_DB: quant_db
+    ports:
+      - "5432:5432" 
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - quant_net
+
+  redis:
+    image: redis:alpine
+    container_name: quant_redis
+    restart: always
+    ports:
+      - "6379:6379"
+    networks:
+      - quant_net
+
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: quant_rabbitmq
+    restart: always
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    networks:
+      - quant_net
+
+networks:
+  quant_net:
+    driver: bridge
+
+volumes:
+  postgres_data:
