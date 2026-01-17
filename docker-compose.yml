@@ -23,6 +23,20 @@ services:
       - redis
     networks:
       - quant_net
+  python-muscle:
+    build:
+      context: ./services/python-muscle
+      dockerfile: Dockerfile
+    container_name: quant_muscle
+    restart: always
+    environment:
+      - DATABASE_URL=postgresql://quant_user:quant_pass@postgres:5432/quant_db
+      - T_BANK_TOKEN=${T_BANK_TOKEN}
+    depends_on:
+      - postgres
+      - python-brain # Ждем Brain, чтобы он успел создать таблицы в БД!
+    networks:
+      - quant_net
 
   
   postgres:
