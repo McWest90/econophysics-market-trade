@@ -1,12 +1,9 @@
-from sqlalchemy import create_engine, Column, String, Float, DateTime, Integer, BigInteger
+from sqlalchemy import create_engine, Column, String, Float, DateTime, BigInteger
 from sqlalchemy.orm import declarative_base, sessionmaker
-from sqlalchemy.sql import exists
 import pandas as pd
+from .config import DATABASE_URL, logger
 
-from src.config import DATA_DIR, logger
 
-DB_PATH = DATA_DIR / "market_data.db"
-DATABASE_URL = f"sqlite:///{DB_PATH}"
 
 engine = create_engine(DATABASE_URL, echo=False)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
@@ -28,8 +25,11 @@ class Candle(Base):
 
 
 def init_db():
-    Base.metadata.create_all(bind=engine)
-    logger.info(f"База данных подключена: {DB_PATH}")
+    try:
+        Base.metadata.create_all(bind=engine)
+        logger.info(f"База данных подключена: {DATABASE_URL.split('@')[-1]}")
+    except Exception as e:
+        logger.error(f"Ошибка подключения к БД: {e}")
 
 
 def get_last_candle_time(ticker: str):

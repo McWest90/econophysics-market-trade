@@ -6,8 +6,8 @@ from t_tech.invest import Client, CandleInterval
 from t_tech.invest.utils import now, quotation_to_decimal
 from t_tech.invest.exceptions import RequestError
 
-from src.config import TOKEN, logger
-from src.storage import save_candles_to_db, get_last_candle_time, init_db
+from .config import TOKEN, logger
+from .storage import save_candles_to_db, get_last_candle_time, init_db
 
 init_db()
 

@@ -8,12 +8,12 @@ from t_tech.invest import Client, OrderDirection, OrderType
 from t_tech.invest.sandbox.client import SandboxClient 
 from t_tech.invest.utils import quotation_to_decimal, decimal_to_quotation
 
-from src.config import TOKEN, BASE_DIR, DATA_DIR
-from src.storage import load_ticker_data
-from src.loader import download_data
-from src.ml.model import PhysicsLSTMPredictor
-from src.ml.dataset import MarketDataset
-from src.physics import calculate_square_root_law, calculate_deviations
+from ..config import TOKEN, BASE_DIR, DATA_DIR
+from ..storage import load_ticker_data
+from ..loader import download_data
+from ..ml.model import PhysicsLSTMPredictor
+from ..ml.dataset import MarketDataset
+from ..physics import calculate_square_root_law, calculate_deviations
 
 LOG_DIR = BASE_DIR / "logs"
 LOG_DIR.mkdir(exist_ok=True)
